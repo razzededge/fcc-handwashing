@@ -1,5 +1,27 @@
 <script>
 import ProgressBar from './ProgressBar.svelte';
+const totalSeconds = 20;
+let secondsLeft = totalSeconds;
+$: progress = (secondsLeft / totalSeconds) * 100;;
+
+let interval;
+
+function startTimer() {
+secondsLeft = totalSeconds;
+progress = 100;
+clearInterval(interval);
+
+interval = setInterval(() => {
+    secondsLeft -= 1;
+    if(!secondsLeft) {
+        clearInterval(interval);
+    }
+}, 1000);
+}
+
+
+
+
 </script>
 
 <style>
@@ -17,10 +39,13 @@ h2 {
 
 <div bp="grid">
     <h2 bp="offset-5@md 4@md 12@sm">
-        Seconds left:
+        Seconds left: {secondsLeft}
     </h2>
 </div>
 
-<ProgressBar />
+<ProgressBar progress="{progress}" />
 
-<button class="start">Start</button>
+<div bp="grid">
+
+<button on:click={startTimer} bp="offset-5@md 4@md 12@sm" class="start">Start</button>
+</div>
